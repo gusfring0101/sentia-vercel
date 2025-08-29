@@ -240,5 +240,3 @@ SENTIA es una herramienta de bienestar emocional y **NO constituye asesoramiento
 ---
 
 **Desarrollado con ❤️ para democratizar el acceso al bienestar emocional**
-
-*Proyecto desarrollado para candidatura RETECH NextGen EU - Democratización del bienestar emocional juvenil*
