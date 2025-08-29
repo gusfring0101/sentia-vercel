@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SENTIA - Tu compañero emocional</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 48px;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        .safety-notice {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .safety-notice strong {
+            color: #856404;
+        }
+
+        .emergency-box {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            text-align: center;
+            font-weight: bold;
+            color: #721c24;
+        }
+
+        .chat-container {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            max-height: 70vh;
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding-right: 10px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 15px;
+            max-width: 80%;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .message.user {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.assistant {
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #e9ecef;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message.system {
+            background: #e3f2fd;
+            color: #1565c0;
+            text-align: center;
+            margin: 0 auto;
+            font-style: italic;
+            max-width: 90%;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .input-container {
+            flex: 1;
+            position: relative;
+        }
+
+        #messageInput {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: none;
+            min-height: 50px;
+            max-height: 120px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        #messageInput:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .char-counter {
+            position: absolute;
+            right: 10px;
+            bottom: 5px;
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        #sendButton {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            min-width: 80px;
+        }
+
+        #sendButton:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        #sendButton:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            color: #667eea;
+            font-style: italic;
+        }
+
+        .typing-dots {
+            display: inline-block;
+        }
+
+        .typing-dots::after {
+            content: '';
+            animation: dots 1.5s infinite;
+        }
+
+        .privacy-note {
+            text-align: center;
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 10px; }
+            .logo { font-size: 32px; }
+            .message { max-width: 95%; }
+            .input-area { flex-direction: column; }
+            #sendButton { width: 100%; }
+        }
+
+        .crisis-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .crisis-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 500px;
+            text-align: center;
+            margin: 20px;
+        }
+
+        .crisis-title {
+            color: #dc3545;
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .crisis-text {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .crisis-contacts {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .crisis-button {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">💙 SENTIA</div>
+            <p><strong>Tu compañero emocional asistido por IA</strong></p>
+            
+            <div class="safety-notice">
+                <strong>⚠️ Aviso importante:</strong> SENTIA es un compañero de apoyo emocional y <strong>NO sustituye terapia profesional</strong>. 
+                Solo escucha y te ayuda a reflexionar. Si sientes peligro inmediato, <strong>llama al 112</strong>.
+            </div>
+
+            <div class="emergency-box">
+                🚨 EMERGENCIAS: 112 | 📞 Crisis Emocional: 024
+            </div>
+        </div>
+
+        <div class="chat-container">
+            <div class="messages" id="messages">
+                <div class="message system">
+                    Hola, soy SENTIA. Antes de comenzar, ¿cómo te gustaría que me refiera a ti? 
+                    (Solo para hacer la conversación más personal - no guardamos datos)
+                </div>
+            </div>
+
+            <div class="typing-indicator" id="typingIndicator">
+                SENTIA está escribiendo<span class="typing-dots"></span>
+            </div>
+
+            <div class="input-area">
+                <div class="input-container">
+                    <textarea 
+                        id="messageInput" 
+                        placeholder="Cuéntame cómo te sientes o cómo quieres que me refiera a ti..."
+                        maxlength="500"
+                        rows="1"
+                    ></textarea>
+                    <div class="char-counter">
+                        <span id="charCount">0</span>/500
+                    </div>
+                </div>
+                <button id="sendButton">Enviar</button>
+            </div>
+
+            <div class="privacy-note">
+                🔒 Privacidad: Esta conversación no se guarda en nuestros servidores
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Crisis -->
+    <div class="crisis-modal" id="crisisModal">
+        <div class="crisis-content">
+            <h2 class="crisis-title">🚨 Tu seguridad es importante</h2>
+            <div class="crisis-text">
+                He detectado que puedes estar pasando por una situación muy difícil. 
+                Quiero que sepas que <strong>no estás solo/a</strong> y que hay ayuda profesional disponible.
+            </div>
+            <div class="crisis-contacts">
+                <p><strong>📞 LÍNEA DE CRISIS: 024</strong></p>
+                <p>Gratuita, confidencial y 24 horas</p>
+                <p><strong>🚨 EMERGENCIAS: 112</strong></p>
+            </div>
+            <p>Por favor, contacta con un profesional de inmediato.</p>
+            <button class="crisis-button" onclick="closeCrisisModal()">Entendido</button>
+        </div>
+    </div>
+
+    <script>
+        let userName = '';
+        let conversationStarted = false;
+        let isWaitingForName = true;
+
+        const messagesContainer = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const charCount = document.getElementById('charCount');
+        const crisisModal = document.getElementById('crisisModal');
+
+        // Auto-resize textarea
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+            
+            // Update character counter
+            charCount.textContent = this.value.length;
+        });
+
+        // Send message on Enter (Shift+Enter for new line)
+        messageInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        sendButton.addEventListener('click', sendMessage);
+
+        function addMessage(content, sender, isSystem = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isSystem ? 'system' : sender}`;
+            messageDiv.innerHTML = content.replace(/\n/g, '<br>');
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function showTyping() {
+            typingIndicator.style.display = 'block';
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function hideTyping() {
+            typingIndicator.style.display = 'none';
+        }
+
+        function showCrisisModal() {
+            crisisModal.style.display = 'flex';
+        }
+
+        function closeCrisisModal() {
+            crisisModal.style.display = 'none';
+        }
+
+        function detectCrisis(message) {
+            const crisisKeywords = [
+                'no puedo más', 'quiero morir', 'suicidarme', 'hacerme daño',
+                'terminar con todo', 'no vale la pena', 'mejor muerto',
+                'acabar con mi vida', 'quitarme la vida', 'no sirvo'
+            ];
+            
+            return crisisKeywords.some(keyword => 
+                message.toLowerCase().includes(keyword)
+            );
+        }
+
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message || sendButton.disabled) return;
+
+            // Check for crisis keywords
+            if (detectCrisis(message)) {
+                showCrisisModal();
+                addMessage(message, 'user');
+                addMessage(
+                    `${userName ? userName + ', ' : ''}he detectado que estás pasando por un momento muy difícil. Tu vida tiene valor y hay personas capacitadas para ayudarte ahora mismo.\n\n📞 **LÍNEA DE CRISIS: 024** (gratuita, 24h)\n🚨 **EMERGENCIAS: 112**\n\nPor favor, contacta con un profesional de inmediato. Estaré aquí cuando te sientas más seguro/a.`,
+                    'assistant'
+                );
+                messageInput.value = '';
+                return;
+            }
+
+            // Handle name request
+            if (isWaitingForName && !conversationStarted) {
+                userName = message;
+                addMessage(message, 'user');
+                addMessage(
+                    `¡Perfecto, ${userName}! Me alegra conocerte. Mi propósito es ser tu compañero de apoyo emocional - no sustituyo terapia profesional, pero estoy aquí para escucharte sin juzgar.\n\nRecuerda: solo escucho y te ayudo a reflexionar. ¿Cómo te sientes hoy?`,
+                    'assistant'
+                );
+                isWaitingForName = false;
+                conversationStarted = true;
+                messageInput.value = '';
+                messageInput.placeholder = 'Cuéntame cómo te sientes...';
+                return;
+            }
+
+            addMessage(message, 'user');
+            messageInput.value = '';
+            sendButton.disabled = true;
+            showTyping();
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        userName: userName || '',
+                        conversationStarted: conversationStarted
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                
+                hideTyping();
+                addMessage(data.response, 'assistant');
+
+                // Handle crisis detection from backend
+                if (data.crisis_detected) {
+                    showCrisisModal();
+                }
+
+            } catch (error) {
+                hideTyping();
+                console.error('Error:', error);
+                addMessage(
+                    `${userName ? userName + ', ' : ''}disculpa, tengo dificultades técnicas temporales. Pero quiero que sepas que estoy aquí para ti. Si es urgente, recuerda: 📞 024 (crisis) o 🚨 112 (emergencias)`,
+                    'assistant'
+                );
+            } finally {
+                sendButton.disabled = false;
+                messageInput.focus();
+            }
+        }
+
+        // Focus input on load
+        window.addEventListener('load', () => {
+            messageInput.focus();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+{
+  "name": "sentia-vercel",
+  "version": "1.0.0",
+  "description": "SENTIA - Tu compañero emocional asistido por IA para jóvenes. Plataforma de acompañamiento emocional que democratiza el acceso al bienestar.",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Static files - no build needed'",
+    "start": "vercel dev --listen 3000",
+    "deploy": "vercel --prod",
+    "lint": "echo 'No linting configured'",
+    "test": "echo 'No tests configured - manual testing required'"
+  },
+  "keywords": [
+    "mental-health",
+    "emotional-support",
+    "ai-companion",
+    "youth-wellness",
+    "psychological-support",
+    "vercel",
+    "serverless"
+  ],
+  "author": {
+    "name": "SENTIA Team",
+    "email": "hello@sentia.app"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/sentia-vercel.git"
+  },
+  "homepage": "https://sentia-vercel.vercel.app",
+  "bugs": {
+    "url": "https://github.com/yourusername/sentia-vercel/issues"
+  }
+}
