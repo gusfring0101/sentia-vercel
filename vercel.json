@@ -1,57 +1,8 @@
-{
-  "version": 2,
-  "name": "sentia",
-  "builds": [
-    {
-      "src": "index.html",
-      "use": "@vercel/static"
+ {
+    "functions": {
+      "api/chat.js": {
+        "maxDuration": 30
+      }
     },
-    {
-      "src": "api/chat.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/chat",
-      "dest": "/api/chat.js",
-      "methods": ["POST", "OPTIONS"]
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ],
-  "functions": {
-    "api/chat.js": {
-      "maxDuration": 30,
-      "memory": 512
-    }
-  },
-  "regions": ["fra1"],
-  "env": {
-    "MODEL_PROVIDER": "@model_provider",
-    "OPENAI_API_KEY": "@openai_api_key",
-    "ANTHROPIC_API_KEY": "@anthropic_api_key",
-    "MODEL_NAME": "@model_name"
-  },
-  "headers": [
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET, POST, PUT, DELETE, OPTIONS"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "X-Requested-With, Content-Type, Authorization"
-        }
-      ]
-    }
-  ]
-}
+    "regions": ["fra1"]
+  }
